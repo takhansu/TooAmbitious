@@ -21,3 +21,4 @@
    <canvas id="canvas" width="150" height="150"></canvas>
  </body>
 </html>
+<!-- You can load an html document in your browser by doing file:///{filepath} -->
