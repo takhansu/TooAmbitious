@@ -19,18 +19,29 @@ public class Ball
 	World world;
 	float radius;
 	Sprite playerSprite;
+	/* CHANGED BY PETER 10-24-2014 */
+	int mass; //mass will be discrete at first
+	//Variables for specifying position
+	int xpos = 0, ypos = 0;
+    /* END             */
 	
-	public Ball(World world, int x, int y) 
+	public Ball(World world, int x, int y, int r) 
 	{
 		
 		this.world = world;
-		this.radius = 20;
+		/* CHANGED BY PETER 10-24-2014 */
+		// Just changed this to have a variable radius at the start of a level
+		// Maybe the player can start off big or small later on
+		this.radius = r;
+		/* END                         */
+		xpos = x;
+		ypos = y;
 		
 		Texture texture = new Texture(Gdx.files.internal("PlayerBall.png"), true); // sets sprite of ball with some filter
 		texture.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.MipMapLinearLinear);
 		
 		body = createCircle(BodyType.DynamicBody, radius);
-		body.setTransform(x, y, 0);																	
+		body.setTransform(xpos, ypos, 0);																	
 		body.setUserData(this);
 
 		playerSprite = new Sprite(texture, 128, 128);												
@@ -44,19 +55,19 @@ public class Ball
 		BodyDef definition = new BodyDef();
 		definition.type = type;
 		
-		Body box = world.createBody(definition);
+		Body ball = world.createBody(definition);
 		
 		CircleShape poly = new CircleShape();	
 		
 		poly.setRadius(radius);
 		
-		Fixture fixture = box.createFixture(poly, 1);
+		Fixture fixture = ball.createFixture(poly, 1);
 		fixture.setFriction(1);
 		fixture.setRestitution(0.75f);								//Makes circle more or less elastic
 		
 		poly.dispose();
 
-		return box;
+		return ball;
 	}
 	
 	public void update(SpriteBatch batch)

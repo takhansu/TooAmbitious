@@ -23,7 +23,7 @@ public class Level implements Screen
 	float levelR;
 	float levelG;
 	float levelB;
-
+	
 	Ball player;
 	Box box; // later perhaps this could be changed to a list of boxes so it is easy to keep track of any amount for a given level
 	
@@ -35,9 +35,19 @@ public class Level implements Screen
 		batch = new SpriteBatch();
 		batch.setProjectionMatrix(camera.combined);
 		
+		/* CHANGED BY PETER 10-24-2014 */
+		//Tell level to use BungieInputProcessor 
+		//(perhaps should be moved to game class later)
+		BungieInputProcessor inputProcessor = new BungieInputProcessor();
+		Gdx.input.setInputProcessor(inputProcessor);
+		/* END                         */
+		
 		world = new World(new Vector2(0, gravity), true); // set up the world to handle physics
 		
-		player = new Ball(world,-200, 0); // make a new ball 200 game units to the left of the center
+		/* CHANGED BY PETER 10-24-2014 */
+		player = new Ball(world,-200, 0, 20); // make a new ball 200 game units to the left of the center
+		/* END                         */
+		
 		box = new Box(world, 200f, 0f, 30f, 30f);
 		
 		levelR = 255;
@@ -54,8 +64,8 @@ public class Level implements Screen
 		Gdx.gl.glClearColor(levelR, levelG, levelB, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		world.step(Gdx.graphics.getDeltaTime(), 4, 4);	
-		
+		world.step(Gdx.graphics.getDeltaTime(), 4, 4);
+
 		batch.begin();
 		player.update(batch);
 		box.update(batch);
