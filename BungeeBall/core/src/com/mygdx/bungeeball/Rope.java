@@ -35,6 +35,9 @@ public class Rope {
 		createRope(box, ball);
 	}
 	
+	public void attach(Ball ball, Box box) {
+		createRope(box, ball);
+	}
 	
 	public void detach() {
 		// dispose rope
