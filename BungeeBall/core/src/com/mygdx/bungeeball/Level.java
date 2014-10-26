@@ -1,6 +1,7 @@
 package com.mygdx.bungeeball;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,7 +19,7 @@ public class Level implements Screen
 	World world;
 	private Box2DDebugRenderer renderer;
 	
-	float gravity = -9.81f;
+	float gravity = -10f;
 	
 	SpriteBatch batch; // Object used for rendering graphics onto the screen
 	
@@ -66,6 +67,10 @@ public class Level implements Screen
 		player.update(batch);
 		box.update(batch);
 		batch.end();
+		
+		// temporary key to detach from and to delete the rope
+		if (Gdx.input.isKeyPressed(Keys.D))          
+		     rope.delete();
 	}
 
 	@Override

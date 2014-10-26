@@ -14,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Box 
 {
 
-	Body body;
+	public Body body;
 	World world;
 	
 	float height;

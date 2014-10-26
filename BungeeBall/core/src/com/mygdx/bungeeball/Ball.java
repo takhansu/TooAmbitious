@@ -18,6 +18,7 @@ public class Ball
 	Body body;
 	World world;
 	float radius;
+	float mass;
 	Sprite playerSprite;
 	
 	public Ball(World world, int x, int y) 
@@ -32,7 +33,7 @@ public class Ball
 		body = createCircle(BodyType.DynamicBody, radius);
 		body.setTransform(x, y, 0);																	
 		body.setUserData(this);
-
+		
 		playerSprite = new Sprite(texture, 128, 128);												
 		playerSprite.setSize(radius * 2, radius * 2);
 		playerSprite.setOrigin(radius, radius);
@@ -45,7 +46,6 @@ public class Ball
 		definition.type = type;
 		
 		Body box = world.createBody(definition);
-		
 		CircleShape poly = new CircleShape();	
 		
 		poly.setRadius(radius);
@@ -53,6 +53,7 @@ public class Ball
 		Fixture fixture = box.createFixture(poly, 1);
 		fixture.setFriction(1);
 		fixture.setRestitution(0.75f);								//Makes circle more or less elastic
+		fixture.setDensity(mass);
 		
 		poly.dispose();
 
