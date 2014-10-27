@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -77,10 +78,9 @@ public class Ball
 	
 	/* CHANGED by PETER 10-27-2014 */
 	//Move ball by xincr and yincr
-	public void move(SpriteBatch batch, int xincr, int yincr)
+	public void move(Vector2 force)
 	{
-		playerSprite.setPosition(body.getPosition().x - radius + xincr, body.getPosition().y - radius + yincr);
-		playerSprite.draw(batch);
+		body.applyForceToCenter(force, true);
 	}
 	
 	//Increase mass of ball, change must be either positive or negative (nonzero)
@@ -88,9 +88,11 @@ public class Ball
 	{
 		MassData data = body.getMassData();
 		if(change > 0)
-			data.mass = data.mass + 2;
-		else data.mass = data.mass - 2;
+			data.mass = data.mass + 10;
+		else data.mass = data.mass - 10;
 		body.setMassData(data);
+		System.out.printf("Onject mass: %f\n", data.mass);
+		//playerSprite.draw(batch);
 	}
 	/* END CHANGED */
 }
