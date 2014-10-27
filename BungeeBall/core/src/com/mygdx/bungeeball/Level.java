@@ -69,8 +69,10 @@ public class Level implements Screen
 		batch.end();
 		
 		// temporary key to detach from and to delete the rope
-		if (Gdx.input.isKeyPressed(Keys.D))          
-		     rope.delete();
+		if (Gdx.input.isKeyPressed(Keys.D)) {
+			System.out.println("delete");
+		    rope.delete();
+		}
 	}
 
 	@Override
