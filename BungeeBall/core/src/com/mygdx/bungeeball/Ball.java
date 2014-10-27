@@ -91,6 +91,7 @@ public class Ball
 			data.mass = data.mass + 2;
 		else data.mass = data.mass - 2;
 		body.setMassData(data);
+		//playerSprite.draw(batch);
 	}
 	/* END CHANGED */
 }
