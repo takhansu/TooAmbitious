@@ -10,7 +10,20 @@ public class BungieInputProcessor
 {
    @Override
    public boolean keyDown (int keycode) {
-      return false;
+	  switch (keycode)
+	  {
+	  case Keys.UP:
+		  break;
+	  case Keys.DOWN:
+		  break;
+	  case Keys.LEFT:
+		  break;
+	  case Keys.RIGHT:
+		  break;
+	  default:
+		  break;
+	  }//end switch
+      return true;
    }
 
    @Override
