@@ -3,6 +3,7 @@ package com.mygdx.bungeeball;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Array;
 
 public class Rope {
 	
@@ -19,15 +21,16 @@ public class Rope {
 	private float height;
 	private float width;
 	private int length;
+	public boolean isEmpty;
 	
 	public Rope(World world, int length)
 	{
 		this.world = world;
 		this.length = length;
 		this.height = 10;
-		this.width = 4;
+		this.width = 2;
 		this.bodies = new Body[length];
-		
+		this.isEmpty = true;
 	}
 	
 	public void attach(Box box, Ball ball) {
@@ -40,8 +43,14 @@ public class Rope {
 	
 	public void delete() {
 		for (int i = 0; i < bodies.length; i++) {
+			Array<JointEdge> joints = bodies[i].getJointList();
+			for (int j = 0; j < joints.size; j++) {
+				world.destroyJoint(joints.get(j).joint);
+			}
+			world.destroyBody(bodies[i]);
 			bodies[i] = null;
 		}
+		this.isEmpty = true;
 	}
 	
 	// The rope consists of Bodies and Joints holding them together
@@ -62,8 +71,8 @@ public class Rope {
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
 		fixtureDef.density = 200f; 
-		//fixtureDef.friction = 0.4f;
-		fixtureDef.restitution = 1.2f; // Make it bounce a little bit
+		fixtureDef.friction = 0.2f;
+		fixtureDef.restitution = 1.0f; // elasticity
 		
 		// create the rope segments in the world, and make it a fixture
 		for(int i = 0; i < segments.length; i++) {
@@ -77,6 +86,8 @@ public class Rope {
 		segments = setRevoluteJoints(box, ball, segments);
 		segments = setRopeJoints(box, ball, segments);
 		
+		this.isEmpty = false;
+		
 		return segments;
 	}
 	
@@ -84,13 +95,15 @@ public class Rope {
 		// A revolute joint forces two bodies to share a common anchor point, often called a hinge point.
 		RevoluteJoint[] joints = new RevoluteJoint[length - 1];
 		RevoluteJointDef jointDef = new RevoluteJointDef();
-		jointDef.localAnchorA.y = -height / 2;
+		jointDef.localAnchorA.y = -box.height / 2;
 		jointDef.localAnchorB.y = height / 2;
 
 		// initial attachment of the rope to the box
 		jointDef.bodyA = box.body;
 		jointDef.bodyB = segments[0];
 		joints[0] = (RevoluteJoint) world.createJoint(jointDef);
+		
+		jointDef.localAnchorA.y = -height / 2;
 		
 		// chain the rope segments
 		for(int i = 0; i < joints.length; i++) {
@@ -112,14 +125,16 @@ public class Rope {
 		// useful to prevent chains of bodies from over stretching, even under high load.
 		RopeJoint[] ropeJoints = new RopeJoint[length - 1];
 		RopeJointDef ropeJointDef = new RopeJointDef();
-		ropeJointDef.localAnchorA.set(0, -height / 2);
+		ropeJointDef.localAnchorA.set(0, -box.height / 2);
 		ropeJointDef.localAnchorB.set(0, height / 2);
-		ropeJointDef.maxLength = length;
+		ropeJointDef.maxLength = length * height;
 
 		// initial attachment of the rope to the box
 		ropeJointDef.bodyA = box.body;
 		ropeJointDef.bodyB = segments[0];
 		ropeJoints[0] = (RopeJoint) world.createJoint(ropeJointDef);
+		
+		ropeJointDef.localAnchorA.set(0, -height / 2);
 		
 		// chain the rope segments
 		for(int i = 0; i < ropeJoints.length; i++) {
