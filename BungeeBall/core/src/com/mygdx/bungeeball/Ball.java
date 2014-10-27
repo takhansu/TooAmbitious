@@ -88,8 +88,8 @@ public class Ball
 	{
 		MassData data = body.getMassData();
 		if(change > 0)
-			data.mass = data.mass + 2;
-		else data.mass = data.mass - 2;
+			data.mass = data.mass + 10;
+		else data.mass = data.mass - 10;
 		body.setMassData(data);
 		System.out.printf("Onject mass: %f\n", data.mass);
 		//playerSprite.draw(batch);

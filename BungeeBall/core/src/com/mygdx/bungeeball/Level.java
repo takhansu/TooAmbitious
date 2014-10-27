@@ -79,25 +79,25 @@ public class Level implements Screen
 		//Should move this into a switch statement
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			System.out.println("Move Left");
-		    player.move(new Vector2(-500,0));
+		    player.move(new Vector2(-10000,0));
 		}
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			System.out.println("Move Right");
-		    player.move(new Vector2(500,0));
+		    player.move(new Vector2(10000,0));
 		}
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
 			System.out.println("Move up");
-		    player.move(new Vector2(0,500));
+		    player.move(new Vector2(0,10000));
 		}
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
 			System.out.println("Move Down");
-		    player.move(new Vector2(0,-500));
+		    player.move(new Vector2(0,-10000));
 		}
-		if (Gdx.input.isKeyPressed(Keys.U)) {
+		if (Gdx.input.isKeyPressed(Keys.I)) {
 			System.out.println("Increase Mass (in kg)");
 		    player.changeMass(batch, 1);
 		}
-		if (Gdx.input.isKeyPressed(Keys.I)) {
+		if (Gdx.input.isKeyPressed(Keys.U)) {
 			System.out.println("Decrease Mass (in kg)");
 		    player.changeMass(batch, -1);
 		}
