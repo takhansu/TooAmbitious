@@ -43,6 +43,10 @@ public class Level implements Screen
 		batch.setProjectionMatrix(camera.combined);
 		renderer = new Box2DDebugRenderer();
 		
+		//Tell level to use BungieInputProcessor (later should be moved to game class)
+		//BungieInputProcessor inputProcessor = new BungieInputProcessor();
+		//Gdx.input.setInputProcessor(inputProcessor);
+		
 		world = new World(new Vector2(0, gravity), true); // set up the world to handle physics
 		
 		player = new Ball(world,-200, 0, 20); // make a new ball 200 game units to the left of the center
@@ -53,6 +57,7 @@ public class Level implements Screen
 		levelR = 255;
 		levelG = 255;
 		levelB = 255;
+		
 	}
 
 	// the "main loop", game logic + graphics updating
@@ -71,6 +76,31 @@ public class Level implements Screen
 		box.update(batch);
 		batch.end();
 		
+		//Should move this into a switch statement
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			System.out.println("Move Left");
+		    player.move(batch, -5, 0);
+		}
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			System.out.println("Move Right");
+		    player.move(batch, 5, 0);
+		}
+		if (Gdx.input.isKeyPressed(Keys.UP)) {
+			System.out.println("Move up");
+		    player.move(batch, 0, 5);
+		}
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+			System.out.println("Move Down");
+		    player.move(batch, 0, -5);
+		}
+		if (Gdx.input.isKeyPressed(Keys.U)) {
+			System.out.println("Increase Mass (in kg");
+		    player.changeMass(batch, 1);
+		}
+		if (Gdx.input.isKeyPressed(Keys.I)) {
+			System.out.println("Decrease Mass (in kg)");
+		    player.changeMass(batch, -1);
+		}
 		// temporary key to detach from and to delete the rope
 		if (Gdx.input.isKeyPressed(Keys.D)) {
 			System.out.println("delete");
