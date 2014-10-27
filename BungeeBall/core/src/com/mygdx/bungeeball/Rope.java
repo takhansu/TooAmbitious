@@ -75,6 +75,7 @@ public class Rope {
 		fixtureDef.density = 200f; 
 		fixtureDef.friction = 0.2f;
 		fixtureDef.restitution = 1.0f; // elasticity
+		//fixtureDef.isSensor = true;
 		
 		// create the rope segments in the world, and make it a fixture
 		for(int i = 0; i < segments.length; i++) {

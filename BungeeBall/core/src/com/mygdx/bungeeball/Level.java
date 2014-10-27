@@ -32,7 +32,9 @@ public class Level implements Screen
 
 	Ball player;
 	Box box; // later perhaps this could be changed to a list of boxes so it is easy to keep track of any amount for a given level
+	Box boxCollision; //
 	Rope rope;
+	boolean renderRope; 
 	
 	// initialize the level
 	public Level(BungeeBall game)
@@ -42,6 +44,7 @@ public class Level implements Screen
 		batch = new SpriteBatch();
 		batch.setProjectionMatrix(camera.combined);
 		renderer = new Box2DDebugRenderer();
+		renderRope = false;
 		
 		//Tell level to use BungieInputProcessor (later should be moved to game class)
 		//BungieInputProcessor inputProcessor = new BungieInputProcessor();
@@ -78,6 +81,13 @@ public class Level implements Screen
 		player.update(batch);
 		box.update(batch);
 		batch.end();
+		
+		//Collision between box and rope sets renderRope as true.
+		if (renderRope && rope.isEmpty){
+    		rope.attach(boxCollision, player);
+    		renderRope = false;
+    		boxCollision = null;
+		}
 		
 		//Should move this into a switch statement
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
@@ -117,14 +127,13 @@ public class Level implements Screen
         	System.out.println("hit ended 0");
         	//Accessed as the two objects seize to collide/overlap.
         	if (contact.getFixtureA().getBody().getUserData() instanceof Ball){
-        		System.out.println("hit ended 1");
         		//Accessed when fixture A is the ball, and fixture B is something else.
+        	
         	} else if (contact.getFixtureA().getBody().getUserData() instanceof Box &&
         			   contact.getFixtureB().getBody().getUserData() instanceof Ball) {
-        		System.out.println("hit ended 2");
-        		//Box box1 = (Box) contact.getFixtureA().getBody().getUserData();
-        		//rope.attach(box, player);
         		//Accessed when fixture B is the ball, and fixture A is something else.
+        		boxCollision = (Box) contact.getFixtureA().getBody().getUserData();
+        		renderRope = true;
         	}
         }
         
