@@ -19,7 +19,7 @@ public class Ball
 	Body body;
 	World world;
 	float radius;
-	//float mass;
+	float mass;
 	Sprite playerSprite;
 	
 	public Ball(World world, int x, int y, int r) 

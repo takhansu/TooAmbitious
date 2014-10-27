@@ -42,13 +42,15 @@ public class Rope {
 	}
 	
 	public void delete() {
-		for (int i = 0; i < bodies.length; i++) {
-			Array<JointEdge> joints = bodies[i].getJointList();
-			for (int j = 0; j < joints.size; j++) {
-				world.destroyJoint(joints.get(j).joint);
+		if (!isEmpty) {
+			for (int i = 0; i < bodies.length; i++) {
+				Array<JointEdge> joints = bodies[i].getJointList();
+				for (int j = 0; j < joints.size; j++) {
+					world.destroyJoint(joints.get(j).joint);
+				}
+				world.destroyBody(bodies[i]);
+				bodies[i] = null;
 			}
-			world.destroyBody(bodies[i]);
-			bodies[i] = null;
 		}
 		this.isEmpty = true;
 	}
