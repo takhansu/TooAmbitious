@@ -7,15 +7,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
-public class Level implements Screen
+public class Level implements Screen 
 {
+	
 	BungeeBall game;
 	
 	private OrthographicCamera camera;
@@ -45,9 +42,9 @@ public class Level implements Screen
 		
 		world = new World(new Vector2(0, gravity), true); // set up the world to handle physics
 		
-		player = new Ball(world,-200, 0, 20); // make a new ball 200 game units to the left of the center
+		player = new Ball(world,-200, 0); // make a new ball 200 game units to the left of the center
 		box = new Box(world, 200f, 0f, 30f, 30f);
-		rope = new Rope(world, 16);
+		rope = new Rope(world, 20);
 		rope.attach(box, player);
 
 		levelR = 255;
@@ -78,63 +75,42 @@ public class Level implements Screen
 		}
 	}
 
-	public class ListenerClass implements ContactListener {
-        @Override
-        public void endContact(Contact contact) {
-        	//Accessed as the two objects seize to collide/overlap.
-        	if (contact.getFixtureA().getBody().getUserData() instanceof Ball){
-        		//Accessed when fixture A is the ball, and fixture B is something else.
-        	} else {
-        		//Accessed when fixture B is the ball, and fixture A is something else.
-        	}
-        }
-        
-        @Override
-        public void beginContact(Contact contact) {
-        	//Accessed as the two objects begin to collide/overlap.
-        	if (contact.getFixtureA().getBody().getUserData() instanceof Ball){
-        		//Accessed when fixture A is the ball, and fixture B is something else.
-        	} else {
-        		//Accessed when fixture B is the ball, and fixture A is something else.
-        	}
-        }
+	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
 
-		@Override
-		public void preSolve(Contact contact, Manifold oldManifold) {
-			// TODO Auto-generated method stub
-		}
+	@Override
+	public void show() {
+		// TODO Auto-generated method stub
+		
+	}
 
-		@Override
-		public void postSolve(Contact contact, ContactImpulse impulse) {
-			// TODO Auto-generated method stub
-		}  
-	};
-        
-    @Override
-    public void resize(int width, int height) {
-    }
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public void show() {
-    }
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public void hide() {
-    }
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void dispose() {
-    	world.dispose();
+	@Override
+	public void dispose() {
+		world.dispose();
 		renderer.dispose();
-    }
+	}
+	
+	
+
 }
-
-
