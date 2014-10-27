@@ -47,12 +47,15 @@ public class Level implements Screen
 		//BungieInputProcessor inputProcessor = new BungieInputProcessor();
 		//Gdx.input.setInputProcessor(inputProcessor);
 		
-		world = new World(new Vector2(0, gravity), true); // set up the world to handle physics
+		world = new World(new Vector2(50, gravity), true); // set up the world to handle physics
 		
-		player = new Ball(world,-200, 0, 20); // make a new ball 200 game units to the left of the center
+		player = new Ball(world,-200, 100, 20); // make a new ball 200 game units to the left of the center
 		box = new Box(world, 200f, 0f, 30f, 30f);
 		rope = new Rope(world, 16);
-		rope.attach(box, player);
+		
+		ListenerClass listener = new ListenerClass();
+		world.setContactListener(listener); //contact listener checks for collisions.
+
 
 		levelR = 255;
 		levelG = 255;
@@ -110,10 +113,17 @@ public class Level implements Screen
 	public class ListenerClass implements ContactListener {
         @Override
         public void endContact(Contact contact) {
+        	
+        	System.out.println("hit ended 0");
         	//Accessed as the two objects seize to collide/overlap.
         	if (contact.getFixtureA().getBody().getUserData() instanceof Ball){
+        		System.out.println("hit ended 1");
         		//Accessed when fixture A is the ball, and fixture B is something else.
-        	} else {
+        	} else if (contact.getFixtureA().getBody().getUserData() instanceof Box &&
+        			   contact.getFixtureB().getBody().getUserData() instanceof Ball) {
+        		System.out.println("hit ended 2");
+        		//Box box1 = (Box) contact.getFixtureA().getBody().getUserData();
+        		//rope.attach(box, player);
         		//Accessed when fixture B is the ball, and fixture A is something else.
         	}
         }

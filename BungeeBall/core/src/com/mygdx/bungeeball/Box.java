@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -49,7 +50,18 @@ public class Box
 
 		PolygonShape poly = new PolygonShape();
 		poly.setAsBox(width/2, height/2);
-		box.createFixture(poly, density);
+		//box.createFixture(poly, density);
+		
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = poly;
+		fixtureDef.density = 0.5f; 
+		fixtureDef.friction = 0.4f;
+		fixtureDef.restitution = 0.6f;
+		fixtureDef.isSensor = true;
+		box.createFixture(fixtureDef);
+		
+		
+//		poly.dispose();
 		poly.dispose();
 
 		return box;
