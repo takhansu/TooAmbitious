@@ -63,7 +63,7 @@ public class Rope {
 		fixtureDef.shape = shape;
 		fixtureDef.density = 200f; 
 		//fixtureDef.friction = 0.4f;
-		fixtureDef.restitution = 0.6f; // Make it bounce a little bit
+		fixtureDef.restitution = 1.2f; // Make it bounce a little bit
 		
 		// create the rope segments in the world, and make it a fixture
 		for(int i = 0; i < segments.length; i++) {
