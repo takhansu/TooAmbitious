@@ -22,7 +22,7 @@ public class Level implements Screen
 	World world;
 	private Box2DDebugRenderer renderer;
 	
-	float gravity = -50f;
+	float gravity = -100f;
 	
 	SpriteBatch batch; // Object used for rendering graphics onto the screen
 	
@@ -53,18 +53,16 @@ public class Level implements Screen
 		
 		world = new World(new Vector2(0, gravity), true); // set up the world to handle physics
 		
+		rope = new Rope(world, 15);
 		player = new Ball(world,-200, 100, 20); // make a new ball 200 game units to the left of the center
 		box = new Box(world, 200f, 0f, 30f, 30f);
-		rope = new Rope(world, 16);
 		
 		ListenerClass listener = new ListenerClass();
 		world.setContactListener(listener); //contact listener checks for collisions.
 
-
 		levelR = 255;
 		levelG = 255;
 		levelB = 255;
-		
 	}
 
 	// the "main loop", game logic + graphics updating
@@ -74,14 +72,6 @@ public class Level implements Screen
 		//Paints background
 		Gdx.gl.glClearColor(levelR, levelG, levelB, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		world.step(Gdx.graphics.getDeltaTime(), 4, 4);	
-		renderer.render(world, camera.combined);
-		
-		batch.begin();
-		player.update(batch);
-		box.update(batch);
-		batch.end();
 		
 		//Collision between box and ball sets renderRope as true.
 		if (renderRope && rope.isEmpty){
@@ -119,6 +109,14 @@ public class Level implements Screen
 		if (Gdx.input.isKeyPressed(Keys.D)) {
 		    rope.delete();
 		}
+		
+		world.step(1/60f, 6, 2);	
+		renderer.render(world, camera.combined);
+		
+		batch.begin();
+		player.update(batch);
+		box.update(batch);
+		batch.end();
 	}
 
 	public class ListenerClass implements ContactListener {

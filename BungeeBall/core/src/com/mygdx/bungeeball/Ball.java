@@ -43,6 +43,8 @@ public class Ball
 		playerSprite = new Sprite(texture, 128, 128);												
 		playerSprite.setSize(radius * 2, radius * 2);
 		playerSprite.setOrigin(radius, radius);
+		
+		this.mass = 50f; // 50kg is ~100lbs
 	}
 	
 	private Body createCircle(BodyType type, float radius) 
@@ -112,8 +114,8 @@ public class Ball
 	{
 		MassData data = body.getMassData();
 		if(change > 0)
-			data.mass = data.mass + 10; //increase mass by 10 kg
-		else data.mass = data.mass - 10; 
+			data.mass = data.mass + 20; //increase mass by 10 kg
+		else data.mass = data.mass - 20; 
 		body.setMassData(data);
 		System.out.printf("Object mass: %f\n", data.mass);
 		//playerSprite.draw(batch);

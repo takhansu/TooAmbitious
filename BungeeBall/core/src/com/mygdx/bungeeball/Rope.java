@@ -7,8 +7,8 @@ import com.badlogic.gdx.physics.box2d.JointEdge;
 //import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
-import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
-import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -22,14 +22,16 @@ public class Rope {
 	private float height;
 	private float width;
 	private int length;
+	private float stiffness;
 	public boolean isEmpty;
 	
 	public Rope(World world, int length)
 	{
 		this.world = world;
 		this.length = length;
-		this.height = 10;
-		this.width = 2;
+		this.stiffness = 30f;
+		this.height = 1;
+		this.width = 1;
 		this.bodies = new Body[length];
 		this.isEmpty = true;
 	}
@@ -49,6 +51,7 @@ public class Rope {
 				for (int j = 0; j < joints.size; j++) {
 					world.destroyJoint(joints.get(j).joint);
 				}
+				joints = null;
 				world.destroyBody(bodies[i]);
 				bodies[i] = null;
 			}
@@ -73,9 +76,8 @@ public class Rope {
 		// To Do: adjust the fields to make the joints more elastic
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
-		fixtureDef.density = 2.1f;//200f; 
-		fixtureDef.friction = 0.2f;
-		fixtureDef.restitution = 1.0f; // elasticity
+		//fixtureDef.density = 1.0f;//200f; 
+		fixtureDef.restitution = 0.1f; // elasticity
 		fixtureDef.filter.categoryBits = 0x0; // disable collision
 		fixtureDef.isSensor = true;
 		
@@ -89,7 +91,7 @@ public class Rope {
 		
 		// Java can't pass by reference
 		segments = setRevoluteJoints(box, ball, segments);
-		segments = setRopeJoints(box, ball, segments);
+		segments = setDistanceJoints(box, ball, segments);
 		
 		this.isEmpty = false;
 		
@@ -102,7 +104,7 @@ public class Rope {
 		RevoluteJointDef jointDef = new RevoluteJointDef();
 		jointDef.localAnchorA.y = -box.height / 2;
 		jointDef.localAnchorB.y = height / 2;
-
+		
 		// initial attachment of the rope to the box
 		jointDef.bodyA = box.body;
 		jointDef.bodyB = segments[0];
@@ -125,33 +127,39 @@ public class Rope {
 		return segments;
 	}
 	
-	private Body[] setRopeJoints(Box box, Ball ball, Body[] segments) {
-		// The rope joint restricts the maximum distance between two points. This can be
-		// useful to prevent chains of bodies from over stretching, even under high load.
-		RopeJoint[] ropeJoints = new RopeJoint[length - 1];
-		RopeJointDef ropeJointDef = new RopeJointDef();
-		ropeJointDef.localAnchorA.set(0, -box.height / 2);
-		ropeJointDef.localAnchorB.set(0, height / 2);
-		ropeJointDef.maxLength = length * height;
-
-		// initial attachment of the rope to the box
-		ropeJointDef.bodyA = box.body;
-		ropeJointDef.bodyB = segments[0];
-		ropeJoints[0] = (RopeJoint) world.createJoint(ropeJointDef);
+	private Body[] setDistanceJoints(Box box, Ball ball, Body[] segments) {
+		DistanceJoint[] distJoints = new DistanceJoint[length - 1];
+		DistanceJointDef distJointDef = new DistanceJointDef();
 		
-		ropeJointDef.localAnchorA.set(0, -height / 2);
+		// set the initial anchor point (-box.height / 2)
+		distJointDef.localAnchorA.set(0, -box.height / 2);
+		distJointDef.localAnchorB.set(0, height / 2);
+		
+		// set the joint's properties
+		distJointDef.dampingRatio = 0.1f; // the rate of reaching equilibrium/rest, 0-1
+		distJointDef.frequencyHz = 3; // the rate of oscillation/bounce, 1-5
+		distJointDef.length = stiffness; // the max resting length of the joint
+		
+		// initial attachment of the rope to the box
+		distJointDef.bodyA = box.body;
+		distJointDef.bodyB = segments[0];
+		distJoints[0] = (DistanceJoint) world.createJoint(distJointDef);
+		
+		// redefine the joint's anchor point to the height of one rope segment
+		distJointDef.localAnchorA.set(0, -height / 2);
 		
 		// chain the rope segments
-		for(int i = 0; i < ropeJoints.length; i++) {
-			ropeJointDef.bodyA = segments[i];
-			ropeJointDef.bodyB = segments[i + 1];
-			ropeJoints[i] = (RopeJoint) world.createJoint(ropeJointDef);
+		for(int i = 0; i < distJoints.length; i++) {
+			distJointDef.bodyA = segments[i];
+			distJointDef.bodyB = segments[i + 1];
+			distJoints[i] = (DistanceJoint) world.createJoint(distJointDef);
+			distJointDef.length = stiffness * i; // the max resting length
 		}
 		
 		// finally, attach the rope's end to the ball
-		ropeJointDef.bodyA = segments[length - 2];
-		ropeJointDef.bodyB = ball.body;
-		ropeJoints[length - 2] = (RopeJoint) world.createJoint(ropeJointDef);
+		distJointDef.bodyA = segments[length - 2];
+		distJointDef.bodyB = ball.body;
+		distJoints[length - 2] = (DistanceJoint) world.createJoint(distJointDef);
 		
 		return segments;
 	}
@@ -170,9 +178,7 @@ public class Rope {
 			}	
 		}	
 	}
-	*/
-	
-	/*
+
 	//Get the mass of the rope's pieces.
 	public float getMass(){
 		if (!isEmpty){
