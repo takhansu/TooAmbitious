@@ -90,6 +90,11 @@ public class Level implements Screen
     		boxCollision = null;
 		}
 		
+		if (setRopeMass){
+			rope.setMass(10);
+			setRopeMass = false;
+		}
+		
 		//Should move this into a switch statement
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			System.out.println("Move Left");
@@ -134,10 +139,7 @@ public class Level implements Screen
         	} else if (contact.getFixtureA().getBody().getUserData() instanceof Box &&
         			   contact.getFixtureB().getBody().getUserData() instanceof Ball) {
         		//Accessed when fixture B is the ball, and fixture A is something else
-        		if(setRopeMass){
-        			rope.setMass(20);
-        			setRopeMass = false;
-        		}
+        			setRopeMass = true;
         	}	
         }
         

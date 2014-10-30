@@ -73,7 +73,7 @@ public class Rope {
 		// To Do: adjust the fields to make the joints more elastic
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
-		fixtureDef.density = 2.1f;//200f; 
+		fixtureDef.density = 1f;//200f; 
 		fixtureDef.friction = 0.2f;
 		fixtureDef.restitution = 1.0f; // elasticity
 		fixtureDef.isSensor = true;
@@ -163,10 +163,8 @@ public class Rope {
 			for (int i=0; i < bodies.length; i++){
 				if(bodies[i].getMassData().mass > 0){
 					data = bodies[i].getMassData(); 
-					data.mass += input;
-					//Currently causing a crash:
-					//bodies[i].setMassData(data);
-					//Once we figure it out though, should work!
+					data.mass = input;
+					bodies[i].setMassData(data);
 				}
 			}	
 		}	
