@@ -83,7 +83,6 @@ public class Ball
 	private void updateColor()
 	{
 		float mass = body.getMass();
-		System.out.printf("In Color: %f\n", mass);
 		
 		// Get a green value inversely proportional to mass, will make the ball more bright yellow at lower mass and more dark red at higher mass
 		float green = 200.0f / mass;		
@@ -116,7 +115,7 @@ public class Ball
 			data.mass = data.mass + 10; //increase mass by 10 kg
 		else data.mass = data.mass - 10; 
 		body.setMassData(data);
-		System.out.printf("Onject mass: %f\n", data.mass);
+		System.out.printf("Object mass: %f\n", data.mass);
 		//playerSprite.draw(batch);
 	}
 	/* END CHANGED */

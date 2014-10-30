@@ -22,7 +22,7 @@ public class Level implements Screen
 	World world;
 	private Box2DDebugRenderer renderer;
 	
-	float gravity = -10f;
+	float gravity = -50f;
 	
 	SpriteBatch batch; // Object used for rendering graphics onto the screen
 	
@@ -51,7 +51,7 @@ public class Level implements Screen
 		//BungieInputProcessor inputProcessor = new BungieInputProcessor();
 		//Gdx.input.setInputProcessor(inputProcessor);
 		
-		world = new World(new Vector2(50, gravity), true); // set up the world to handle physics
+		world = new World(new Vector2(0, gravity), true); // set up the world to handle physics
 		
 		player = new Ball(world,-200, 100, 20); // make a new ball 200 game units to the left of the center
 		box = new Box(world, 200f, 0f, 30f, 30f);
@@ -93,29 +93,27 @@ public class Level implements Screen
 		//Should move this into a switch statement
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			System.out.println("Move Left");
-		    player.move(new Vector2(-10000,0));
+		    player.move(new Vector2(-50000,0));
 		}
 		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			System.out.println("Move Right");
-		    player.move(new Vector2(10000,0));
+		    player.move(new Vector2(50000,0));
 		}
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
 			System.out.println("Move up");
-		    player.move(new Vector2(0,10000));
+		    player.move(new Vector2(0,50000));
 		}
 		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
 			System.out.println("Move Down");
-		    player.move(new Vector2(0,-10000));
+		    player.move(new Vector2(0,-50000));
 		}
 		if (Gdx.input.isKeyPressed(Keys.I)) {
 			System.out.println("Increase Mass (in kg)");
-			rope.setMass(1);
 		    player.changeMass(batch, 1);
 		}
 		if (Gdx.input.isKeyPressed(Keys.U)) {
 			System.out.println("Decrease Mass (in kg)");
 		    player.changeMass(batch, -1);
-		    rope.setMass(-1);
 		}
 		// temporary key to detach from and to delete the rope
 		if (Gdx.input.isKeyPressed(Keys.D)) {
@@ -133,11 +131,6 @@ public class Level implements Screen
         	
         	} else if (contact.getFixtureA().getBody().getUserData() instanceof Box &&
         			   contact.getFixtureB().getBody().getUserData() instanceof Ball) {
-        		//Accessed when fixture B is the ball, and fixture A is something else
-        		if(setRopeMass){
-        			rope.setMass(20);
-        			setRopeMass = false;
-        		}
         	}	
         }
         
