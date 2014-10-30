@@ -35,6 +35,7 @@ public class Level implements Screen
 	Box boxCollision; //
 	Rope rope;
 	boolean renderRope; 
+	boolean setRopeMass = false;
 	
 	// initialize the level
 	public Level(BungeeBall game)
@@ -82,7 +83,7 @@ public class Level implements Screen
 		box.update(batch);
 		batch.end();
 		
-		//Collision between box and rope sets renderRope as true.
+		//Collision between box and ball sets renderRope as true.
 		if (renderRope && rope.isEmpty){
     		rope.attach(boxCollision, player);
     		renderRope = false;
@@ -108,11 +109,13 @@ public class Level implements Screen
 		}
 		if (Gdx.input.isKeyPressed(Keys.I)) {
 			System.out.println("Increase Mass (in kg)");
+			rope.setMass(1);
 		    player.changeMass(batch, 1);
 		}
 		if (Gdx.input.isKeyPressed(Keys.U)) {
 			System.out.println("Decrease Mass (in kg)");
 		    player.changeMass(batch, -1);
+		    rope.setMass(-1);
 		}
 		// temporary key to detach from and to delete the rope
 		if (Gdx.input.isKeyPressed(Keys.D)) {
@@ -124,17 +127,18 @@ public class Level implements Screen
         @Override
         public void endContact(Contact contact) {
         	
-        	System.out.println("hit ended 0");
         	//Accessed as the two objects seize to collide/overlap.
         	if (contact.getFixtureA().getBody().getUserData() instanceof Ball){
         		//Accessed when fixture A is the ball, and fixture B is something else.
         	
         	} else if (contact.getFixtureA().getBody().getUserData() instanceof Box &&
         			   contact.getFixtureB().getBody().getUserData() instanceof Ball) {
-        		//Accessed when fixture B is the ball, and fixture A is something else.
-        		boxCollision = (Box) contact.getFixtureA().getBody().getUserData();
-        		renderRope = true;
-        	}
+        		//Accessed when fixture B is the ball, and fixture A is something else
+        		if(setRopeMass){
+        			rope.setMass(20);
+        			setRopeMass = false;
+        		}
+        	}	
         }
         
         @Override
@@ -142,8 +146,12 @@ public class Level implements Screen
         	//Accessed as the two objects begin to collide/overlap.
         	if (contact.getFixtureA().getBody().getUserData() instanceof Ball){
         		//Accessed when fixture A is the ball, and fixture B is something else.
-        	} else {
+        	} else if (contact.getFixtureA().getBody().getUserData() instanceof Box &&
+     			       contact.getFixtureB().getBody().getUserData() instanceof Ball) {
         		//Accessed when fixture B is the ball, and fixture A is something else.
+        		boxCollision = (Box) contact.getFixtureA().getBody().getUserData();
+        		renderRope = true;
+        		setRopeMass = true;
         	}
         }
 

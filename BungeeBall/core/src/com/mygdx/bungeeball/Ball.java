@@ -113,8 +113,8 @@ public class Ball
 	{
 		MassData data = body.getMassData();
 		if(change > 0)
-			data.mass = data.mass + 10;
-		else data.mass = data.mass - 10;
+			data.mass = data.mass + 10; //increase mass by 10 kg
+		else data.mass = data.mass - 10; 
 		body.setMassData(data);
 		System.out.printf("Onject mass: %f\n", data.mass);
 		//playerSprite.draw(batch);

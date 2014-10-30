@@ -60,8 +60,6 @@ public class Box
 		fixtureDef.isSensor = true;
 		box.createFixture(fixtureDef);
 		
-		
-//		poly.dispose();
 		poly.dispose();
 
 		return box;

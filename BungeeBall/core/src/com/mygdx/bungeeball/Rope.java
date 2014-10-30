@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.JointEdge;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
@@ -72,10 +73,10 @@ public class Rope {
 		// To Do: adjust the fields to make the joints more elastic
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
-		fixtureDef.density = 200f; 
+		fixtureDef.density = 2.1f;//200f; 
 		fixtureDef.friction = 0.2f;
 		fixtureDef.restitution = 1.0f; // elasticity
-		//fixtureDef.isSensor = true;
+		fixtureDef.isSensor = true;
 		
 		// create the rope segments in the world, and make it a fixture
 		for(int i = 0; i < segments.length; i++) {
@@ -153,6 +154,33 @@ public class Rope {
 		
 		return segments;
 	}
+	
+	//change the mass of the rope.
+	//Currently used to match densities with the player
+	public void setMass(float input){
+		if (!isEmpty){
+			MassData data; 
+			for (int i=0; i < bodies.length; i++){
+				if(bodies[i].getMassData().mass > 0){
+					data = bodies[i].getMassData(); 
+					data.mass += input;
+					//Currently causing a crash:
+					//bodies[i].setMassData(data);
+					//Once we figure it out though, should work!
+				}
+			}	
+		}	
+	}
+	
+	//Get the mass of the rope's pieces.
+	public float getMass(){
+		if (!isEmpty){
+			return bodies[0].getMassData().mass;
+		} else {
+			return -1;
+		}
+	}
+		
 	
 	public void update(SpriteBatch batch)
 	{
