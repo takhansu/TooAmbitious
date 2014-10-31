@@ -112,6 +112,10 @@ public class Ball
 	public void changeMass(SpriteBatch batch, int change)
 	{
 		MassData data = body.getMassData();
+		if (data.mass >= 1300 && change > 0)
+			return;
+		if (data.mass <= 0 && change < 0)
+			return;
 	    data.mass = data.mass + change;
 		body.setMassData(data);
 		System.out.printf("Object mass: %f\n", data.mass);
