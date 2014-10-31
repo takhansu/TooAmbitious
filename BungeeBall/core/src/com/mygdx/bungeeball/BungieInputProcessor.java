@@ -1,7 +1,5 @@
 package com.mygdx.bungeeball;
 
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 

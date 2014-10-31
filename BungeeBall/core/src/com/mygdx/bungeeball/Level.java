@@ -32,7 +32,10 @@ public class Level implements Screen
 
 	Ball player;
 	Box box; // later perhaps this could be changed to a list of boxes so it is easy to keep track of any amount for a given level
+	Box boxCollision; //
 	Rope rope;
+	boolean renderRope; 
+	boolean setRopeMass = false;
 	
 	// initialize the level
 	public Level(BungeeBall game)
@@ -42,17 +45,21 @@ public class Level implements Screen
 		batch = new SpriteBatch();
 		batch.setProjectionMatrix(camera.combined);
 		renderer = new Box2DDebugRenderer();
+		renderRope = false;
 		
 		//Tell level to use BungieInputProcessor (later should be moved to game class)
 		//BungieInputProcessor inputProcessor = new BungieInputProcessor();
 		//Gdx.input.setInputProcessor(inputProcessor);
 		
-		world = new World(new Vector2(0, gravity), true); // set up the world to handle physics
+		world = new World(new Vector2(50, gravity), true); // set up the world to handle physics
 		
-		player = new Ball(world,-200, 0, 20); // make a new ball 200 game units to the left of the center
+		player = new Ball(world,-200, 100, 20); // make a new ball 200 game units to the left of the center
 		box = new Box(world, 200f, 0f, 30f, 30f);
 		rope = new Rope(world, 16);
-		rope.attach(box, player);
+		
+		ListenerClass listener = new ListenerClass();
+		world.setContactListener(listener); //contact listener checks for collisions.
+
 
 		levelR = 255;
 		levelG = 255;
@@ -75,6 +82,18 @@ public class Level implements Screen
 		player.update(batch);
 		box.update(batch);
 		batch.end();
+		
+		//Collision between box and ball sets renderRope as true.
+		if (renderRope && rope.isEmpty){
+    		rope.attach(boxCollision, player);
+    		renderRope = false;
+    		boxCollision = null;
+		}
+		
+		if (setRopeMass){
+			rope.setMass(10);
+			setRopeMass = false;
+		}
 		
 		//Should move this into a switch statement
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
@@ -100,6 +119,8 @@ public class Level implements Screen
 		if (Gdx.input.isKeyPressed(Keys.U)) {
 			System.out.println("Decrease Mass (in kg)");
 		    player.changeMass(batch, -100);
+			rope.setMass(1);
+		    player.changeMass(batch, 1);
 		}
 		// temporary key to detach from and to delete the rope
 		if (Gdx.input.isKeyPressed(Keys.D)) {
@@ -110,12 +131,16 @@ public class Level implements Screen
 	public class ListenerClass implements ContactListener {
         @Override
         public void endContact(Contact contact) {
+        	
         	//Accessed as the two objects seize to collide/overlap.
         	if (contact.getFixtureA().getBody().getUserData() instanceof Ball){
         		//Accessed when fixture A is the ball, and fixture B is something else.
-        	} else {
-        		//Accessed when fixture B is the ball, and fixture A is something else.
-        	}
+        	
+        	} else if (contact.getFixtureA().getBody().getUserData() instanceof Box &&
+        			   contact.getFixtureB().getBody().getUserData() instanceof Ball) {
+        		//Accessed when fixture B is the ball, and fixture A is something else
+        			setRopeMass = true;
+        	}	
         }
         
         @Override
@@ -123,8 +148,12 @@ public class Level implements Screen
         	//Accessed as the two objects begin to collide/overlap.
         	if (contact.getFixtureA().getBody().getUserData() instanceof Ball){
         		//Accessed when fixture A is the ball, and fixture B is something else.
-        	} else {
+        	} else if (contact.getFixtureA().getBody().getUserData() instanceof Box &&
+     			       contact.getFixtureB().getBody().getUserData() instanceof Ball) {
         		//Accessed when fixture B is the ball, and fixture A is something else.
+        		boxCollision = (Box) contact.getFixtureA().getBody().getUserData();
+        		renderRope = true;
+        		setRopeMass = true;
         	}
         }
 
