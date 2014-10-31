@@ -87,11 +87,9 @@ public class Ball
 	public void changeMass(SpriteBatch batch, int change)
 	{
 		MassData data = body.getMassData();
-		if(change > 0)
-			data.mass = data.mass + 10;
-		else data.mass = data.mass - 10;
+	    data.mass = data.mass + change;
 		body.setMassData(data);
-		System.out.printf("Onject mass: %f\n", data.mass);
+		System.out.printf("Object mass: %f\n", data.mass);
 		//playerSprite.draw(batch);
 	}
 	/* END CHANGED */

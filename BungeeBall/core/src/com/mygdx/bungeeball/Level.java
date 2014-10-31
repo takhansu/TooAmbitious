@@ -95,11 +95,11 @@ public class Level implements Screen
 		}
 		if (Gdx.input.isKeyPressed(Keys.I)) {
 			System.out.println("Increase Mass (in kg)");
-		    player.changeMass(batch, 1);
+		    player.changeMass(batch, 100);
 		}
 		if (Gdx.input.isKeyPressed(Keys.U)) {
 			System.out.println("Decrease Mass (in kg)");
-		    player.changeMass(batch, -1);
+		    player.changeMass(batch, -100);
 		}
 		// temporary key to detach from and to delete the rope
 		if (Gdx.input.isKeyPressed(Keys.D)) {
