@@ -1,3 +1,4 @@
+/*
 package com.mygdx.bungeeball;
 
 import com.badlogic.gdx.Gdx;
@@ -52,7 +53,7 @@ public class Level implements Screen
 		
 		player = new Ball(world,0, 100, 20, 20f, 6000f); // make a new ball 200 game units to the left of the center
 		box = new Box(world, 0, 0, 30f, 30f);
-		rope = new Rope(world, 200, 2000);
+		rope = new Rope(world, 10);
 		
 		ListenerClass listener = new ListenerClass();
 		world.setContactListener(listener); //contact listener checks for collisions.
@@ -109,10 +110,7 @@ public class Level implements Screen
 		
 		// temporary key to detach from and to delete the rope
 		if (Gdx.input.isKeyPressed(Keys.SPACE)) {
-			if (!rope.isEmpty)
-				rope.delete();
-			else
-				rope.attach(player, box);
+		    rope.delete();
 		}
 	}
 
@@ -179,5 +177,4 @@ public class Level implements Screen
 		renderer.dispose();
     }
 }
-
-
+*/
