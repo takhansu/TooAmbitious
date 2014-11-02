@@ -22,7 +22,7 @@ public class Level implements Screen
 	World world;
 	private Box2DDebugRenderer renderer;
 	
-	float gravity = -10f;
+	float gravity = -100f;
 	
 	SpriteBatch batch; // Object used for rendering graphics onto the screen
 	
@@ -53,7 +53,7 @@ public class Level implements Screen
 		
 		world = new World(new Vector2(0, gravity), true); // set up the world to handle physics
 		
-		player = new Ball(world,0, 100, 20, 20f, 1000f); // make a new ball 200 game units to the left of the center
+		player = new Ball(world,0, 100, 20, 20f, 6000f); // make a new ball 200 game units to the left of the center
 		box = new Box(world, 0, 0, 30f, 30f);
 		rope = new Rope(world, 16);
 		
