@@ -23,7 +23,8 @@ public class Rope {
 	private float height;
 	private float width;
 	private int length;
-	private final short CATEGORY_SEGMENTS = 0x0001;
+	//private final short CATEGORY_SEGMENTS = 0x0001;
+	private final short GROUP_SEGMENTS = -1;
 	
 	public boolean isEmpty;
 	
@@ -31,8 +32,10 @@ public class Rope {
 	{
 		this.world = world;
 		this.length = length;
-		this.height = 10;
-		this.width = 2;
+		//this.height = 10;
+		//this.width = 2;
+		this.height = 0;
+		this.width = 0;
 		this.bodies = new Body[length];
 		this.isEmpty = true;
 	}
@@ -78,8 +81,7 @@ public class Rope {
 		fixtureDef.shape = shape;
 		//fixtureDef.filter.categoryBits = CATEGORY_SEGMENTS;
 		//fixtureDef.filter.maskBits = CATEGORY_SEGMENTS;
-		fixtureDef.filter.groupIndex = -1; // disables collision
-		fixtureDef.isSensor = true;
+		fixtureDef.filter.groupIndex = GROUP_SEGMENTS; // disables collision
 		
 		// create the rope segments in the world, and make it a fixture
 		for(int i = 0; i < segments.length; i++) {

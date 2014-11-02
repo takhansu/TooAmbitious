@@ -34,8 +34,6 @@ public class Level implements Screen
 	Box box; // later perhaps this could be changed to a list of boxes so it is easy to keep track of any amount for a given level
 	Box boxCollision; //
 	Rope rope;
-	boolean renderRope; 
-	boolean setRopeMass = false;
 	
 	// initialize the level
 	public Level(BungeeBall game)
@@ -45,7 +43,6 @@ public class Level implements Screen
 		batch = new SpriteBatch();
 		batch.setProjectionMatrix(camera.combined);
 		renderer = new Box2DDebugRenderer();
-		renderRope = false;
 		
 		//Tell level to use BungieInputProcessor (later should be moved to game class)
 		//BungieInputProcessor inputProcessor = new BungieInputProcessor();
@@ -64,7 +61,6 @@ public class Level implements Screen
 		levelR = 255;
 		levelG = 255;
 		levelB = 255;
-		
 	}
 
 	// the "main loop", game logic + graphics updating
@@ -84,9 +80,8 @@ public class Level implements Screen
 		batch.end();
 		
 		//Collision between box and ball sets renderRope as true.
-		if (renderRope && rope.isEmpty){
-    		rope.attach(boxCollision, player);
-    		renderRope = false;
+		if (rope.isEmpty && boxCollision != null) {
+    		rope.attach(box, player);
     		boxCollision = null;
 		}
 		
@@ -100,23 +95,20 @@ public class Level implements Screen
 		    player.move(new Vector2(10000,0));
 		}
 		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			System.out.println("Move up");
-		    player.move(new Vector2(0,10000));
-		}
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			System.out.println("Move Down");
-		    player.move(new Vector2(0,-10000));
-		}
-		if (Gdx.input.isKeyPressed(Keys.I)) {
-			System.out.println("Increase Mass (in kg)");
-		    player.changeMass(100);
-		}
-		if (Gdx.input.isKeyPressed(Keys.U)) {
+			//System.out.println("Move up");
+		    //player.move(new Vector2(0,10000));
 			System.out.println("Decrease Mass (in kg)");
 		    player.changeMass(-100);
 		}
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+			//System.out.println("Move Down");
+		    //player.move(new Vector2(0,-10000));
+			System.out.println("Increase Mass (in kg)");
+			player.changeMass(100);
+		}
+		
 		// temporary key to detach from and to delete the rope
-		if (Gdx.input.isKeyPressed(Keys.D)) {
+		if (Gdx.input.isKeyPressed(Keys.SPACE)) {
 		    rope.delete();
 		}
 	}
@@ -144,8 +136,6 @@ public class Level implements Screen
      			       contact.getFixtureB().getBody().getUserData() instanceof Ball) {
         		//Accessed when fixture B is the ball, and fixture A is something else.
         		boxCollision = (Box) contact.getFixtureA().getBody().getUserData();
-        		renderRope = true;
-        		setRopeMass = true;
         	}
         }
 
