@@ -52,7 +52,7 @@ public class Level implements Screen
 		
 		player = new Ball(world,0, 100, 20, 20f, 6000f); // make a new ball 200 game units to the left of the center
 		box = new Box(world, 0, 0, 30f, 30f);
-		rope = new Rope(world, 16);
+		rope = new Rope(world, 10);
 		
 		ListenerClass listener = new ListenerClass();
 		world.setContactListener(listener); //contact listener checks for collisions.

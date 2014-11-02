@@ -1,6 +1,4 @@
 package com.mygdx.bungeeball;
-
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.JointEdge;
@@ -8,8 +6,6 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import com.badlogic.gdx.physics.box2d.joints.RopeJoint;
-import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -23,8 +19,7 @@ public class Rope {
 	private float height;
 	private float width;
 	private int length;
-	//private final short CATEGORY_SEGMENTS = 0x0001;
-	private final short GROUP_SEGMENTS = -1;
+	private final short GROUP_ROPE_SEGMENTS = -1;
 	
 	public boolean isEmpty;
 	
@@ -34,8 +29,8 @@ public class Rope {
 		this.length = length;
 		//this.height = 10;
 		//this.width = 2;
-		this.height = 0;
-		this.width = 0;
+		this.height = 4;
+		this.width = 1;
 		this.bodies = new Body[length];
 		this.isEmpty = true;
 	}
@@ -79,9 +74,10 @@ public class Rope {
 		// To Do: adjust the fields to make the joints more elastic
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = shape;
-		//fixtureDef.filter.categoryBits = CATEGORY_SEGMENTS;
-		//fixtureDef.filter.maskBits = CATEGORY_SEGMENTS;
-		fixtureDef.filter.groupIndex = GROUP_SEGMENTS; // disables collision
+		fixtureDef.density = 0;
+		fixtureDef.friction = 0;
+		fixtureDef.restitution = 0;
+		fixtureDef.filter.groupIndex = GROUP_ROPE_SEGMENTS; // disables collision
 		
 		// create the rope segments in the world, and make it a fixture
 		for(int i = 0; i < segments.length; i++) {
@@ -164,38 +160,4 @@ public class Rope {
 		
 		return segments;
 	}
-	
-	/*
-	private Body[] setRopeJoints(Box box, Ball ball, Body[] segments) {
-		// The rope joint restricts the maximum distance between two points. This can be
-		// useful to prevent chains of bodies from over stretching, even under high load.
-		RopeJoint[] ropeJoints = new RopeJoint[length - 1];
-		RopeJointDef ropeJointDef = new RopeJointDef();
-		ropeJointDef.localAnchorA.set(0, -box.height / 2);
-		ropeJointDef.localAnchorB.set(0, height / 2);
-		ropeJointDef.maxLength = length * height;
-
-		// initial attachment of the rope to the box
-		ropeJointDef.bodyA = box.body;
-		ropeJointDef.bodyB = segments[0];
-		ropeJoints[0] = (RopeJoint) world.createJoint(ropeJointDef);
-		
-		ropeJointDef.localAnchorA.set(0, -height / 2);
-		
-		// chain the rope segments
-		for(int i = 0; i < ropeJoints.length; i++) {
-			ropeJointDef.bodyA = segments[i];
-			ropeJointDef.bodyB = segments[i + 1];
-			ropeJoints[i] = (RopeJoint) world.createJoint(ropeJointDef);
-		}
-		
-		// finally, attach the rope's end to the ball
-		ropeJointDef.bodyA = segments[length - 2];
-		ropeJointDef.bodyB = ball.body;
-		ropeJoints[length - 2] = (RopeJoint) world.createJoint(ropeJointDef);
-		
-		return segments;
-	}
-	*/
-
 }
